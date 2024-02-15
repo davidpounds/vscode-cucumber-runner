@@ -1,16 +1,15 @@
 {
-  "name": "vscode-jest-runner",
-  "displayName": "Jest Runner",
+  "name": "vscode-cucumber-runner",
+  "displayName": "Cucumber Runner",
   "description": "Simple way to run or debug a single (or multiple) tests from context-menu",
-  "version": "0.4.72",
-  "publisher": "firsttris",
-  "author": "Tristan Teufel",
+  "version": "0.0.1",
+  "publisher": "davidpounds",
+  "author": "David Pounds",
   "repository": {
     "type": "git",
-    "url": "https://github.com/firsttris/vscode-jest-runner.git"
+    "url": "https://github.com/davidpounds/vscode-cucumber-runner.git"
   },
   "license": "MIT",
-  "icon": "public/icon.png",
   "engines": {
     "vscode": "^1.83.0"
   },
@@ -24,100 +23,60 @@
   "contributes": {
     "configuration": [
       {
-        "title": "Jest-Runner Config",
+        "title": "Cucumber-Runner Config",
         "properties": {
-          "jestrunner.configPath": {
-            "type": "string",
-            "default": "",
-            "description": "Jest config path (relative to `${workspaceFolder}` e.g. jest-config.json)",
-            "scope": "window"
-          },
-          "jestrunner.jestPath": {
+          "cucumberrunner.jestPath": {
             "type": "string",
             "default": "",
             "description": "Absolute path to jest bin file (e.g. /usr/lib/node_modules/jest/bin/jest.js)",
             "scope": "window"
           },
-          "jestrunner.projectPath": {
-            "type": "string",
-            "default": "",
-            "description": "Absolute path to project directory (e.g. /home/me/project/sub-folder)",
-            "scope": "window"
-          },
-          "jestrunner.debugOptions": {
+          "cucumberrunner.debugOptions": {
             "type": "object",
             "default": {},
             "description": "Add or overwrite vscode debug configurations (only in debug mode) (e.g. { \"args\": [\"--no-cache\"] })",
             "scope": "window"
           },
-          "jestrunner.runOptions": {
-            "type": "array",
-            "default": [],
-            "items": {
-              "type": "string",
-              "description": "CLI Option e.g. --coverage"
-            },
-            "description": "Add CLI Options to the Jest Command e.g. https://jestjs.io/docs/en/cli",
-            "scope": "window"
-          },
-          "jestrunner.jestCommand": {
-            "type": "string",
-            "default": "",
-            "description": "Define an alternative Jest command (e.g. for Create React App and similar abstractions)",
-            "scope": "window"
-          },
-          "jestrunner.disableCodeLens": {
+          "cucumberrunner.disableCodeLens": {
             "type": "boolean",
             "default": false,
             "description": "Disable CodeLens feature",
             "scope": "window"
           },
-          "jestrunner.runInExternalNativeTerminal": {
+          "cucumberrunner.runInExternalNativeTerminal": {
             "type": "boolean",
             "default": false,
-            "description": "Run jest runner in external native terminal. Disabled on debug mode",
+            "description": "Run cucumber runner in external native terminal. Disabled on debug mode",
             "scope": "window"
           },
-          "jestrunner.codeLens": {
+          "cucumberrunner.codeLens": {
             "type": "array",
             "default": [
               "run",
               "debug"
             ],
-            "description": "Enable desired codeLens, possible value : 'run', 'debug', 'watch', 'coverage'. Defaults to ['run', 'debug'] ",
+            "description": "Enable desired codeLens, possible value : 'run', 'debug'. Defaults to ['run', 'debug'] ",
             "items": {
               "type": "string",
-              "description": "Either 'run', 'debug', 'watch', 'coverage'"
+              "description": "Either 'run', or 'debug'"
             },
             "scope": "window"
           },
-          "jestrunner.codeLensSelector": {
+          "cucumberrunner.codeLensSelector": {
             "type": "string",
-            "default": "**/*.{test,spec}.{js,jsx,ts,tsx}",
+            "default": "**/*.feature",
             "description": "CodeLens will be shown on files matching this pattern"
           },
-          "jestrunner.enableYarnPnpSupport": {
-            "type": "boolean",
-            "default": false,
-            "description": "Enable if you are using Yarn 2 with Plug'n'Play",
-            "scope": "window"
-          },
-          "jestrunner.changeDirectoryToWorkspaceRoot": {
+          "cucumberrunner.changeDirectoryToWorkspaceRoot": {
             "type": "boolean",
             "default": true,
-            "description": "Changes directory before execution. The fallback order is:\n1. `jestrunner.projectPath`\n2. the nearest `package.json`\n3. `${workspaceFolder}`",
+            "description": "Changes directory before execution. The fallback order is:\n1. the nearest `package.json`\n2. `${workspaceFolder}`",
             "scope": "window"
           },
-          "jestrunner.preserveEditorFocus": {
+          "cucumberrunner.preserveEditorFocus": {
             "type": "boolean",
             "default": false,
             "description": "Preserve focus on editor when running tests",
-            "scope": "window"
-          },
-          "jestrunner.yarnPnpCommand": {
-            "type": "string",
-            "default": "yarn-*.*js",
-            "description": "Command for debugging with Plug'n'Play",
             "scope": "window"
           }
         }
@@ -125,71 +84,43 @@
     ],
     "commands": [
       {
-        "command": "extension.runJest",
-        "title": "Run Jest"
+        "command": "extension.runCucumber",
+        "title": "Run Cucumber"
       },
       {
-        "command": "extension.runJestPath",
-        "title": "Run Jest on Path"
+        "command": "extension.runCucumberFile",
+        "title": "Run Cucumber on File"
       },
       {
-        "command": "extension.runJestCoverage",
-        "title": "Run Jest and generate Coverage"
+        "command": "extension.debugCucumber",
+        "title": "Debug Cucumber"
       },
       {
-        "command": "extension.runJestAndUpdateSnapshots",
-        "title": "Run Jest and update Snapshots"
-      },
-      {
-        "command": "extension.runPrevJest",
-        "title": "Run Jest - Run Previous Test"
-      },
-      {
-        "command": "extension.runJestFile",
-        "title": "Run Jest on File"
-      },
-      {
-        "command": "extension.debugJest",
-        "title": "Debug Jest"
-      },
-      {
-        "command": "extension.debugJestPath",
-        "title": "Debug Jest on Path"
-      },
-      {
-        "command": "extension.runJestFileWithCoverage",
-        "title": "Run Jest File and generate Coverage"
-      },
-      {
-        "command": "extension.runJestFileWithWatchMode",
-        "title": "Run Jest File in Watch Mode"
-      },
-      {
-        "command": "extension.watchJest",
-        "title": "Run Jest --watch"
+        "command": "extension.debugCucumberPath",
+        "title": "Debug Cucumber on Path"
       }
     ],
     "menus": {
       "editor/context": [
         {
-          "command": "extension.runJest",
-          "group": "02_jest"
+          "command": "extension.runCucumber",
+          "group": "02_cucumber"
         },
         {
-          "command": "extension.debugJest",
-          "group": "02_jest"
+          "command": "extension.debugCucumber",
+          "group": "02_cucumber"
         }
       ],
       "explorer/context": [
         {
-          "command": "extension.runJestPath",
-          "when": "explorerResourceIsFolder || resourceFilename =~ /.*\\.(spec|test)\\.(js|jsx|ts|tsx)$/",
-          "group": "02_jest@1"
+          "command": "extension.runCucumberPath",
+          "when": "explorerResourceIsFolder || resourceFilename =~ /.*\\.feature$/",
+          "group": "02_cucumber@1"
         },
         {
-          "command": "extension.debugJestPath",
-          "when": "explorerResourceIsFolder || resourceFilename =~ /.*\\.(spec|test)\\.(js|jsx|ts|tsx)$/",
-          "group": "02_jest@2"
+          "command": "extension.debugCucumberPath",
+          "when": "explorerResourceIsFolder || resourceFilename =~ /.*\\.feature$/",
+          "group": "02_cucumber@2"
         }
       ]
     }
@@ -198,7 +129,6 @@
     "vscode:prepublish": "webpack --mode production",
     "build": "webpack --mode development",
     "watch": "webpack --mode development --watch",
-    "test": "jest .src/test",
     "vsce:publish": "vsce publish patch -m '%s [skip ci]' && git push",
     "ovsx:publish": "ovsx publish",
     "publish": "npm run vsce:publish && npm run ovsx:publish",

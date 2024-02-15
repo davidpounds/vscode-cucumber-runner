@@ -1,5 +1,3 @@
-import { execSync } from 'child_process';
-
 export function isWindows(): boolean {
   return process.platform.includes('win32');
 }
@@ -17,15 +15,16 @@ export function escapeRegExpForPath(s: string): string {
   return s.replace(/[*+?^${}<>()|[\]]/g, '\\$&'); // $& means the whole matched string
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function findFullTestName(selectedLine: number, children: any[]): string | undefined {
   if (!children) {
     return;
   }
   for (const element of children) {
-    if (element.type === 'describe' && selectedLine === element.start.line) {
+    if (element.type === 'Scenario' && selectedLine === element.start.line) {
       return resolveTestNameStringInterpolation(element.name);
     }
-    if (element.type !== 'describe' && selectedLine >= element.start.line && selectedLine <= element.end.line) {
+    if (element.type !== 'Scenario' && selectedLine >= element.start.line && selectedLine <= element.end.line) {
       return resolveTestNameStringInterpolation(element.name);
     }
   }
@@ -44,7 +43,7 @@ const QUOTES = {
 };
 
 function resolveTestNameStringInterpolation(s: string): string {
-  const variableRegex = /(\${?[A-Za-z0-9_]+}?|%[psdifjo#%])/gi;
+  const variableRegex = /(\${?\w+}?|%[psdifjo#%])/gi;
   const matchAny = '(.*?)';
   return s.replace(variableRegex, matchAny);
 }
@@ -74,23 +73,14 @@ export function pushMany<T>(arr: T[], items: T[]): number {
   return Array.prototype.push.apply(arr, items);
 }
 
-export type CodeLensOption = 'run' | 'debug' | 'watch' | 'coverage';
+export type CodeLensOption = 'run' | 'debug';
 
 function isCodeLensOption(option: string): option is CodeLensOption {
-  return ['run', 'debug', 'watch', 'coverage'].includes(option);
+  return ['run', 'debug'].includes(option);
 }
 
 export function validateCodeLensOptions(maybeCodeLensOptions: string[]): CodeLensOption[] {
   return [...new Set(maybeCodeLensOptions)].filter((value) => isCodeLensOption(value)) as CodeLensOption[];
-}
-
-export function isNodeExecuteAbleFile(filepath: string): boolean {
-  try {
-    execSync(`node ${filepath} --help`);
-    return true;
-  } catch (err) {
-    return false;
-  }
 }
 
 export function updateTestNameIfUsingProperties(receivedTestName?: string) {

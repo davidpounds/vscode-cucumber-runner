@@ -1,85 +1,57 @@
 'use strict';
 import * as vscode from 'vscode';
 
-import { JestRunner } from './jestRunner';
-import { JestRunnerCodeLensProvider } from './JestRunnerCodeLensProvider';
-import { JestRunnerConfig } from './jestRunnerConfig';
+import { CucumberRunner } from './cucumberRunner';
+import { CucumberRunnerCodeLensProvider } from './CucumberRunnerCodeLensProvider';
+import { CucumberRunnerConfig } from './cucumberRunnerConfig';
 
 export function activate(context: vscode.ExtensionContext): void {
-  const config = new JestRunnerConfig();
-  const jestRunner = new JestRunner(config);
-  const codeLensProvider = new JestRunnerCodeLensProvider(config.codeLensOptions);
+  const config = new CucumberRunnerConfig();
+  const cucumberRunner = new CucumberRunner(config);
+  const codeLensProvider = new CucumberRunnerCodeLensProvider(config.codeLensOptions);
 
-  const runJest = vscode.commands.registerCommand(
-    'extension.runJest',
+  const runCucumber = vscode.commands.registerCommand(
+    'extension.runCucumber',
     async (argument: Record<string, unknown> | string) => {
-      return jestRunner.runCurrentTest(argument);
-    }
+      return cucumberRunner.runCurrentTest(argument);
+    },
   );
 
-  const runJestCoverage = vscode.commands.registerCommand(
-    'extension.runJestCoverage',
-    async (argument: Record<string, unknown> | string) => {
-      return jestRunner.runCurrentTest(argument, ['--coverage']);
-    }
+  const runCucumberPath = vscode.commands.registerCommand('extension.runCucumberPath', async (argument: vscode.Uri) =>
+    cucumberRunner.runTestsOnPath(argument.path),
   );
-
-  const runJestPath = vscode.commands.registerCommand('extension.runJestPath', async (argument: vscode.Uri) =>
-    jestRunner.runTestsOnPath(argument.path)
+  const runCucumberFile = vscode.commands.registerCommand('extension.runCucumberFile', async () =>
+    cucumberRunner.runCurrentFile(),
   );
-  const runJestAndUpdateSnapshots = vscode.commands.registerCommand('extension.runJestAndUpdateSnapshots', async () => {
-    jestRunner.runCurrentTest('', ['-u']);
-  });
-  const runJestFile = vscode.commands.registerCommand('extension.runJestFile', async () => jestRunner.runCurrentFile());
-  const debugJest = vscode.commands.registerCommand(
-    'extension.debugJest',
+  const debugCucumber = vscode.commands.registerCommand(
+    'extension.debugCucumber',
     async (argument: Record<string, unknown> | string) => {
       if (typeof argument === 'string') {
-        return jestRunner.debugCurrentTest(argument);
+        return cucumberRunner.debugCurrentTest(argument);
       } else {
-        return jestRunner.debugCurrentTest();
+        return cucumberRunner.debugCurrentTest();
       }
-    }
+    },
   );
-  const debugJestPath = vscode.commands.registerCommand('extension.debugJestPath', async (argument: vscode.Uri) =>
-    jestRunner.debugTestsOnPath(argument.path)
-  );
-  const runPrev = vscode.commands.registerCommand('extension.runPrevJest', async () => jestRunner.runPreviousTest());
-  const runJestFileWithCoverage = vscode.commands.registerCommand('extension.runJestFileWithCoverage', async () =>
-    jestRunner.runCurrentFile(['--coverage'])
-  );
-
-  const runJestFileWithWatchMode = vscode.commands.registerCommand('extension.runJestFileWithWatchMode', async () =>
-    jestRunner.runCurrentFile(['--watch'])
-  );
-
-  const watchJest = vscode.commands.registerCommand(
-    'extension.watchJest',
-    async (argument: Record<string, unknown> | string) => {
-      return jestRunner.runCurrentTest(argument, ['--watch']);
-    }
+  const debugCucumberPath = vscode.commands.registerCommand(
+    'extension.debugCucumberPath',
+    async (argument: vscode.Uri) => cucumberRunner.debugTestsOnPath(argument.path),
   );
 
   if (!config.isCodeLensDisabled) {
     const docSelectors: vscode.DocumentFilter[] = [
       {
-        pattern: vscode.workspace.getConfiguration().get('jestrunner.codeLensSelector'),
+        pattern: vscode.workspace.getConfiguration().get('cucumberrunner.codeLensSelector'),
       },
     ];
     const codeLensProviderDisposable = vscode.languages.registerCodeLensProvider(docSelectors, codeLensProvider);
     context.subscriptions.push(codeLensProviderDisposable);
   }
-  context.subscriptions.push(runJest);
-  context.subscriptions.push(runJestCoverage);
-  context.subscriptions.push(runJestAndUpdateSnapshots);
-  context.subscriptions.push(runJestFile);
-  context.subscriptions.push(runJestPath);
-  context.subscriptions.push(debugJest);
-  context.subscriptions.push(debugJestPath);
-  context.subscriptions.push(runPrev);
-  context.subscriptions.push(runJestFileWithCoverage);
-  context.subscriptions.push(runJestFileWithWatchMode);
-  context.subscriptions.push(watchJest);
+  context.subscriptions.push(runCucumber);
+  context.subscriptions.push(runCucumberFile);
+  context.subscriptions.push(runCucumberPath);
+  context.subscriptions.push(debugCucumber);
+  context.subscriptions.push(debugCucumberPath);
 }
 
 export function deactivate(): void {

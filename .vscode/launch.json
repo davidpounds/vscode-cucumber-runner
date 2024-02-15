@@ -8,7 +8,6 @@
             "request": "launch",
             "runtimeExecutable": "${execPath}",
             "args": ["--extensionDevelopmentPath=${workspaceRoot}" ],
-            "stopOnEntry": false,
             "sourceMaps": true,
             "outFiles": [ "${workspaceRoot}/dist/*.js" ],
             "preLaunchTask": "npm: build"
@@ -23,7 +22,6 @@
                 "--folder-uri=${workspaceRoot}/examples",
                 "--file-uri=${workspaceRoot}/examples/examples.test.ts"
             ],
-            "stopOnEntry": false,
             "sourceMaps": true,
             "outFiles": [ "${workspaceRoot}/dist/*.js" ],
             "preLaunchTask": "npm: build"
