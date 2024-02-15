@@ -20,8 +20,8 @@ export class CucumberRunnerConfig {
   }
 
   public get cucumberBinPath(): string {
-    const jestPath = path.join(this.cwd, 'bin/cucumber');
-    return normalizePath(jestPath);
+    const cucumberPath = path.join(this.cwd, 'bin/cucumber');
+    return normalizePath(cucumberPath);
   }
 
   public get cwd(): string {
