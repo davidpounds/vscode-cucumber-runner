@@ -11,10 +11,6 @@ export class CucumberRunnerConfig {
     return `bin/cucumber`;
   }
 
-  public get changeDirectoryToWorkspaceRoot(): boolean {
-    return vscode.workspace.getConfiguration().get('cucumberrunner.changeDirectoryToWorkspaceRoot');
-  }
-
   public get preserveEditorFocus(): boolean {
     return vscode.workspace.getConfiguration().get('cucumberrunner.preserveEditorFocus') || false;
   }
@@ -31,16 +27,6 @@ export class CucumberRunnerConfig {
   private get currentWorkspaceFolderPath(): string {
     const editor = vscode.window.activeTextEditor;
     return vscode.workspace.getWorkspaceFolder(editor.document.uri).uri.fsPath;
-  }
-
-  public get debugOptions(): Partial<vscode.DebugConfiguration> {
-    const debugOptions = vscode.workspace.getConfiguration().get('cucumberrunner.debugOptions');
-    return debugOptions || {};
-  }
-
-  public get isCodeLensDisabled(): boolean {
-    const isCodeLensDisabled: boolean = vscode.workspace.getConfiguration().get('cucumberrunner.disableCodeLens');
-    return !!isCodeLensDisabled;
   }
 
   public get isRunInExternalNativeTerminal(): boolean {

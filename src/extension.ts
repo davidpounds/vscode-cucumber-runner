@@ -38,15 +38,14 @@ export function activate(context: vscode.ExtensionContext): void {
     async (argument: vscode.Uri) => cucumberRunner.debugTestsOnPath(argument.path),
   );
 
-  if (!config.isCodeLensDisabled) {
-    const docSelectors: vscode.DocumentFilter[] = [
-      {
-        pattern: vscode.workspace.getConfiguration().get('cucumberrunner.codeLensSelector'),
-      },
-    ];
-    const codeLensProviderDisposable = vscode.languages.registerCodeLensProvider(docSelectors, codeLensProvider);
-    context.subscriptions.push(codeLensProviderDisposable);
-  }
+  const docSelectors: vscode.DocumentFilter[] = [
+    {
+      pattern: vscode.workspace.getConfiguration().get('cucumberrunner.codeLensSelector'),
+    },
+  ];
+  const codeLensProviderDisposable = vscode.languages.registerCodeLensProvider(docSelectors, codeLensProvider);
+
+  context.subscriptions.push(codeLensProviderDisposable);
   context.subscriptions.push(runCucumber);
   context.subscriptions.push(runCucumberFile);
   context.subscriptions.push(runCucumberPath);

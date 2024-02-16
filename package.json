@@ -17,7 +17,7 @@
     "Other"
   ],
   "activationEvents": [
-    "*"
+    "onStartupFinished"
   ],
   "main": "./dist/extension",
   "contributes": {
@@ -25,24 +25,6 @@
       {
         "title": "Cucumber-Runner Config",
         "properties": {
-          "cucumberrunner.jestPath": {
-            "type": "string",
-            "default": "",
-            "description": "Absolute path to jest bin file (e.g. /usr/lib/node_modules/jest/bin/jest.js)",
-            "scope": "window"
-          },
-          "cucumberrunner.debugOptions": {
-            "type": "object",
-            "default": {},
-            "description": "Add or overwrite vscode debug configurations (only in debug mode) (e.g. { \"args\": [\"--no-cache\"] })",
-            "scope": "window"
-          },
-          "cucumberrunner.disableCodeLens": {
-            "type": "boolean",
-            "default": false,
-            "description": "Disable CodeLens feature",
-            "scope": "window"
-          },
           "cucumberrunner.runInExternalNativeTerminal": {
             "type": "boolean",
             "default": false,
@@ -67,12 +49,6 @@
             "default": "**/*.feature",
             "description": "CodeLens will be shown on files matching this pattern"
           },
-          "cucumberrunner.changeDirectoryToWorkspaceRoot": {
-            "type": "boolean",
-            "default": true,
-            "description": "Changes directory before execution. The fallback order is:\n1. the nearest `package.json`\n2. `${workspaceFolder}`",
-            "scope": "window"
-          },
           "cucumberrunner.preserveEditorFocus": {
             "type": "boolean",
             "default": false,
@@ -94,6 +70,10 @@
       {
         "command": "extension.debugCucumber",
         "title": "Debug Cucumber"
+      },
+      {
+        "command": "extension.runCucumberPath",
+        "title": "Run Cucumber on Path"
       },
       {
         "command": "extension.debugCucumberPath",

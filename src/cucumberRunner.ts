@@ -149,7 +149,6 @@ export class CucumberRunner {
       request: 'launch',
       type: 'node',
       cwd: this.config.cwd,
-      ...this.config.debugOptions,
     };
 
     config.args = config.args ? config.args.slice() : [];
@@ -201,9 +200,7 @@ export class CucumberRunner {
 
   private async goToCwd() {
     const command = `cd ${quote(this.config.cwd)}`;
-    if (this.config.changeDirectoryToWorkspaceRoot) {
-      await this.runTerminalCommand(command);
-    }
+    await this.runTerminalCommand(command);
   }
 
   private buildNativeTerminalCommand(toRun: string): string {
